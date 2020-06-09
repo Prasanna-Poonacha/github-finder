@@ -10,24 +10,26 @@ class App extends Component {
     users: [],
     loading: false,
   };
-  //instead of using .then using async await
-  async componentDidMount() {
-    this.setState({ loading: true });
+
+  searchUsers = async (text) => {
+    this.setState({
+      loading: true
+    });
     const res = await axios.get(
-      `http://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+      `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
     this.setState({
-      users: res.data,
+      users: res.data.items,
       loading: false,
     });
-  }
+  };
 
   render() {
     return (
       <Fragment>
         <Navbar />
         <div className="container">
-          <Search />
+          <Search searchUsers={this.searchUsers} />
           <Users loading={this.state.loading} users={this.state.users} />
         </div>
       </Fragment>
